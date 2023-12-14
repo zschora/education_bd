@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QLineEdit
-from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtCore import Qt, pyqtSignal, QFile, QTextStream
 import bcrypt
 from forms.admin_form import AdminForm
 
@@ -7,7 +7,6 @@ admin_pswd = "$2b$12$UYjTYM29BBEUt3iDekI5kOR9PQTnhbd6ZHe2NmPbtmKs5wf6SxPB."
 user_pswd = "$2b$12$xEzieiJijrAiSSzez0pmbuYmSLplTcgWomRly5FL/vOwVSIU5YL6u"
 
 class LoginForm(QWidget):
-    # Создаем сигнал как классовый атрибут
     show_admin_form = pyqtSignal()
 
     def __init__(self, app):
@@ -42,49 +41,12 @@ class LoginForm(QWidget):
         self.setLayout(layout)
         self.setWindowTitle('Login Form')
 
-        # Устанавливаем фоновый цвет
-        self.setStyleSheet("""
-            QWidget {
-                background-color: #f5f5dc;
-            }
+        style = QFile('forms\\styles\\login_form.css')  # стили формы
+        if style.open(QFile.ReadOnly | QFile.Text):
+            stream = QTextStream(style)
+            self.setStyleSheet(stream.readAll())
 
-            QLabel {
-                color: #964B00;
-                font-size: 18px;
-            }
-
-            QLineEdit {
-                padding: 8px;
-                font-size: 16px;
-                background-color: #ffffff;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-            }
-
-            QPushButton {
-                background-color: #964B00;
-                color: #ffffff;
-                font-size: 18px;
-                border: none;
-                padding: 10px;
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                margin: 4px 2px;
-                cursor: pointer;
-                border-radius: 5px;
-            }
-
-            QPushButton:hover {
-                background-color: #7B3F00;
-            }
-            QPushButton:pressed {
-                background-color: #522C00;  
-            }
-
-        """)
-
-        self.setGeometry(300, 300, 400, 200)  # Задаем размеры окна
+        self.setGeometry(300, 300, 400, 200)  # размеры окна
         self.show()
 
     def login(self):
