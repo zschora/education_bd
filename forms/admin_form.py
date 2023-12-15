@@ -1,7 +1,14 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QHBoxLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QHBoxLayout, QDialog
 from PyQt5.QtCore import QFile, QTextStream, Qt
 from src.database_manager import DatabaseManager
+from forms.dialogs.add_teacher_dialog import AddTeacherDialog
+from forms.dialogs.add_subject_dialog import AddSubjectDialog
+from forms.dialogs.add_major_dialog import AddMajorDialog
+from forms.dialogs.output import OutputDialog
+from forms.dialogs.add_ass_ts_dialog import AddAssociationTeacherSubjectDialog
+from forms.dialogs.add_ass_ms_dialog import AddAssociationMajorSubjectDialog
+from src.models import Teacher, Subject, Major, AssociationMajorSubject, AssociationTeacherSubject
 
 
 class AdminForm(QWidget):
@@ -51,6 +58,14 @@ class AdminForm(QWidget):
         self.add_major_button.clicked.connect(self.add_major)
         modify_layout.addWidget(self.add_major_button)
 
+        self.add_ass_ts_button = QPushButton('Связать учителя и предмет')
+        self.add_ass_ts_button.clicked.connect(self.add_association_teacher_subject)
+        modify_layout.addWidget(self.add_ass_ts_button)
+
+        self.add_ass_ms_button = QPushButton('Связать направление и предмет')
+        self.add_ass_ms_button.clicked.connect(self.add_association_major_subject)
+        modify_layout.addWidget(self.add_ass_ms_button)
+
         main_layout.addLayout(modify_layout)
 
         self.setLayout(main_layout)
@@ -67,24 +82,60 @@ class AdminForm(QWidget):
 
     def print_teachers(self):
         teachers = self.db_manager.get_teachers()
-        for teacher in teachers:
-            print(teacher)
+        output_dialog = OutputDialog('Teachers', teachers)
+        output_dialog.exec_()
 
     def print_subjects(self):
         subjects = self.db_manager.get_subjects()
-        for subject in subjects:
-            print(subject)
+        output_dialog = OutputDialog('Subjects', subjects)
+        output_dialog.exec_()
 
     def print_majors(self):
         majors = self.db_manager.get_majors()
-        for major in majors:
-            print(major)
+        output_dialog = OutputDialog('Majors', majors)
+        output_dialog.exec_()
 
     def add_teacher(self):
-        pass
+        dialog = AddTeacherDialog(self)
+        result = dialog.exec_()
+
+        if result == QDialog.Accepted:
+            teacher_data = dialog.get_teacher_data()
+            self.db_manager.add_teacher(**teacher_data)
+            print(f"Teacher added: {Teacher(**teacher_data)}")
 
     def add_subject(self):
-        pass
+        dialog = AddSubjectDialog(self)
+        result = dialog.exec_()
+
+        if result == QDialog.Accepted:
+            subject_data = dialog.get_subject_data()
+            self.db_manager.add_subject(**subject_data)
+            print(f"Subject added: {Subject(**subject_data)}")
 
     def add_major(self):
-        pass
+        dialog = AddMajorDialog(self)
+        result = dialog.exec_()
+
+        if result == QDialog.Accepted:
+            major_data = dialog.get_major_data()
+            self.db_manager.add_major(**major_data)
+            print(f"Major added: {Major(**major_data)}")
+
+    def add_association_teacher_subject(self):
+        dialog = AddAssociationTeacherSubjectDialog(self)
+        result = dialog.exec_()
+
+        if result == QDialog.Accepted:
+            data = dialog.get_data()
+            self.db_manager.add_association_teacher_subject(**data)
+            print(f"Association added: Teacher{data['teacher_code']}->Subject{data['subject_code']}")
+
+    def add_association_major_subject(self):
+        dialog = AddAssociationMajorSubjectDialog(self)
+        result = dialog.exec_()
+
+        if result == QDialog.Accepted:
+            data = dialog.get_data()
+            self.db_manager.add_association_major_subject(**data)
+            print(f"Association added: Major{data['major_code']}->Subject{data['subject_code']}")

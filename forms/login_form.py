@@ -1,7 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QLineEdit
 from PyQt5.QtCore import Qt, pyqtSignal, QFile, QTextStream
 import bcrypt
-from forms.admin_form import AdminForm
 
 admin_pswd = "$2b$12$UYjTYM29BBEUt3iDekI5kOR9PQTnhbd6ZHe2NmPbtmKs5wf6SxPB."
 user_pswd = "$2b$12$xEzieiJijrAiSSzez0pmbuYmSLplTcgWomRly5FL/vOwVSIU5YL6u"

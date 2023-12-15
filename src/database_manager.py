@@ -56,16 +56,16 @@ class DatabaseManager:
 
     def add_association_teacher_subject(self, teacher_code, subject_code):
         association = AssociationTeacherSubject(
-            teacher_id=teacher_code,
-            subject_id=subject_code
+            teacher_code=teacher_code,
+            subject_code=subject_code
         )
         self.session.add(association)
         self.session.commit()
 
     def add_association_major_subject(self, major_code, subject_code):
         association = AssociationMajorSubject(
-            major_id=major_code,
-            subject_id=subject_code
+            major_code=major_code,
+            subject_code=subject_code
         )
         self.session.add(association)
         self.session.commit()
@@ -97,4 +97,17 @@ class DatabaseManager:
             self.add_association_major_subject(i, i//2)
 
         print('database filling completed')
+
+    def change_teacher_position(self, teacher_code, new_position):
+        try:
+            teacher = self.session.query(Teacher).filter_by(code=teacher_code).first()
+
+            if teacher:
+                teacher.position = new_position
+                self.session.commit()
+                print(f"Должность преподавателя {teacher_code} успешно изменена на {new_position}")
+            else:
+                print(f"Преподаватель с CODE {teacher_code} не найден.")
+        except Exception as e:
+            print(f"Ошибка при изменении должности преподавателя: {e}")
 

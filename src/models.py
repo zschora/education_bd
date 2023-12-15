@@ -58,11 +58,11 @@ class Major(Base):
 
 class AssociationTeacherSubject(Base):
     __tablename__ = 'association_teacher_subject'
-    teacher_id = Column(Integer, ForeignKey('teachers.code'), primary_key=True)
-    subject_id = Column(Integer, ForeignKey('subjects.code'), primary_key=True)
+    teacher_code = Column(Integer, ForeignKey('teachers.code'), primary_key=True)
+    subject_code = Column(Integer, ForeignKey('subjects.code'), primary_key=True)
 
 
 class AssociationMajorSubject(Base):
     __tablename__ = 'association_major_subject'
-    major_id = Column(Integer, ForeignKey('majors.code'), primary_key=True)
-    subject_id = Column(Integer, ForeignKey('subjects.code'), primary_key=True)
+    major_code = Column(Integer, ForeignKey('majors.code'), primary_key=True)
+    subject_code = Column(Integer, ForeignKey('subjects.code'), primary_key=True)

@@ -36,3 +36,9 @@ QPushButton:hover {
 QPushButton:pressed {
     background-color: #522C00;
 }
+
+QComboBox {
+    background-color: #ffffff;
+    color: #964B00;
+    font-size: 18px;
+}

@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QApplication
 from forms.login_form import LoginForm
 from forms.admin_form import AdminForm
 from forms.user_form import UserForm
+from datetime import datetime
 
 if __name__ == '__main__':
     app = QApplication([])
@@ -14,4 +15,5 @@ if __name__ == '__main__':
     login_form.show_user_form.connect(user_form.show)
 
     login_form.show()
+    admin_form.show()
     app.exec_()
