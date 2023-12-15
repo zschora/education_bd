@@ -1,5 +1,8 @@
 # database_manager.py
+from datetime import date
+
 from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.sql import text
 from sqlalchemy import create_engine
 from faker import Faker
 from src.models import Teacher, Subject, Major, AssociationTeacherSubject, AssociationMajorSubject, Base
@@ -93,12 +96,13 @@ class DatabaseManager:
                 code=i,
                 title=fake.word()
             )
-            self.add_association_teacher_subject(i, i//2)
-            self.add_association_major_subject(i, i//2)
+            self.add_association_teacher_subject(i, i // 2)
+            self.add_association_major_subject(i, i // 2)
 
         print('database filling completed')
 
     def change_teacher_position(self, teacher_code, new_position):
+        print(teacher_code, new_position)
         try:
             teacher = self.session.query(Teacher).filter_by(code=teacher_code).first()
 
@@ -111,3 +115,16 @@ class DatabaseManager:
         except Exception as e:
             print(f"Ошибка при изменении должности преподавателя: {e}")
 
+    def get_courses_by_birth_year(self, birth_year):
+
+        sql_query = text("""
+            SELECT distinct subjects.title, subjects.hours
+            FROM teachers
+            JOIN association_teacher_subject ON teachers.code = association_teacher_subject.teacher_code
+            JOIN subjects ON association_teacher_subject.subject_code = subjects.code
+            WHERE date_part('year', teachers.birthday) > """ + f'{birth_year}')
+
+        result = self.engine.connect().execute(sql_query)
+        print(result)
+
+        return result

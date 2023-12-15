@@ -15,5 +15,6 @@ if __name__ == '__main__':
     login_form.show_user_form.connect(user_form.show)
 
     login_form.show()
-    admin_form.show()
+    #admin_form.show()
+    #user_form.show()
     app.exec_()

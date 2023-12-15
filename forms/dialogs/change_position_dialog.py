@@ -1,9 +1,10 @@
-from PyQt5.QtWidgets import QDialog, QLabel, QLineEdit, QPushButton, QVBoxLayout
+from PyQt5.QtCore import QFile, QTextStream
+from PyQt5.QtWidgets import QDialog, QLabel, QLineEdit, QPushButton, QVBoxLayout, QComboBox
 from src.models import Teacher
 from datetime import datetime
 
 
-class AddAssociationMajorSubjectDialog(QDialog):
+class ChangePositionDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.init_ui()
@@ -11,28 +12,33 @@ class AddAssociationMajorSubjectDialog(QDialog):
     def init_ui(self):
         layout = QVBoxLayout()
 
-        self.scode_label = QLabel('Subject code:')
-        self.scode_edit = QLineEdit()
+        self.teacher_code_label = QLabel('Teacher CODE:')
+        self.teacher_code_edit = QLineEdit()
 
-        self.mcode_label = QLabel('Major code:')
-        self.mcode_edit = QLineEdit()
+        self.new_position_label = QLabel('New Position:')
+        self.new_position_edit = QLineEdit()
 
-        self.add_button = QPushButton('Связать')
-        self.add_button.clicked.connect(self.accept)
+        self.change_button = QPushButton('Change Position')
+        self.change_button.clicked.connect(self.accept)
 
-        layout.addWidget(self.scode_label)
-        layout.addWidget(self.scode_edit)
+        layout.addWidget(self.teacher_code_label)
+        layout.addWidget(self.teacher_code_edit)
 
-        layout.addWidget(self.mcode_label)
-        layout.addWidget(self.mcode_edit)
+        layout.addWidget(self.new_position_label)
+        layout.addWidget(self.new_position_edit)
 
-        layout.addWidget(self.add_button)
+        layout.addWidget(self.change_button)
 
         self.setLayout(layout)
-        self.setWindowTitle('Add Association')
+        self.setWindowTitle('Change Position')
+
+        style = QFile('forms\\styles\\admin_form.css')  # стили формы
+        if style.open(QFile.ReadOnly | QFile.Text):
+            stream = QTextStream(style)
+            self.setStyleSheet(stream.readAll())
 
     def get_data(self):
         return {
-            'major_code': int(self.mcode_edit.text()),
-            'subject_code': int(self.scode_edit.text())
+            'teacher_code': int(self.teacher_code_edit.text()),
+            'new_position': self.new_position_edit.text(),
         }

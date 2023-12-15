@@ -27,7 +27,7 @@ class AddTeacherDialog(QDialog):
         self.position_edit = QLineEdit()
 
         self.degree_label = QLabel('Degree:')
-        self.degree_combo = QComboBox()  # Используем QComboBox вместо QLineEdit
+        self.degree_combo = QComboBox()
         self.degree_combo.addItems(('PhD', 'MSc', 'BSc'))
 
         self.add_button = QPushButton('Add Teacher')

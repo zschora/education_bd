@@ -1,9 +1,11 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QDialog, QLabel, QLineEdit
 from PyQt5.QtCore import QFile, QTextStream, Qt
 
 from forms.dialogs.output import OutputDialog
 from src.database_manager import DatabaseManager
+from forms.dialogs.change_position_dialog import ChangePositionDialog
+from src.models import Teacher
 
 
 class UserForm(QWidget):
@@ -33,6 +35,17 @@ class UserForm(QWidget):
         self.change_position_button.clicked.connect(self.change_teacher_position)
         layout.addWidget(self.change_position_button, alignment=Qt.AlignRight)
 
+        self.qq = QPushButton('Запрос')
+        self.qq.clicked.connect(self.query)
+        layout.addWidget(self.qq, alignment=Qt.AlignRight)
+
+        self.year_label = QLabel('Birth year:')
+        self.year_edit = QLineEdit()
+        layout.addWidget(self.year_label, alignment=Qt.AlignRight)
+        layout.addWidget(self.year_edit, alignment=Qt.AlignRight)
+
+
+
         self.setLayout(layout)
         self.setWindowTitle('Пользователь-панель')
         self.setGeometry(300, 300, 400, 200)  # размеры окна
@@ -58,3 +71,16 @@ class UserForm(QWidget):
         output_dialog.exec_()
 
     def change_teacher_position(self):
+        dialog = ChangePositionDialog()
+        result = dialog.exec_()
+
+        if result == QDialog.Accepted:
+            data = dialog.get_data()
+            self.db_manager.change_teacher_position(**data)
+
+    def query(self):
+        res = self.db_manager.get_courses_by_birth_year(int(self.year_edit.text()))
+        output_dialog = OutputDialog('Result', res)
+        output_dialog.exec_()
+
+
