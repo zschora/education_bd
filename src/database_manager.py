@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy import create_engine
 from faker import Faker
 from src.models import Teacher, Subject, Major, AssociationTeacherSubject, AssociationMajorSubject, Base
+from random import randint
 
 fake = Faker()
 
@@ -24,8 +25,9 @@ class DatabaseManager:
     def get_majors(self):
         return self.session.query(Major).all()
 
-    def add_teacher(self, name, lastname, birthday, position, degree):
+    def add_teacher(self, code, name, lastname, birthday, position, degree):
         teacher = Teacher(
+            code=code,
             name=name,
             lastname=lastname,
             birthday=birthday,
@@ -35,69 +37,64 @@ class DatabaseManager:
         self.session.add(teacher)
         self.session.commit()
 
-    def add_subject(self, title, hours):
+    def add_subject(self, code, title, hours):
         subject = Subject(
+            code=code,
             title=title,
             hours=hours
         )
         self.session.add(subject)
         self.session.commit()
 
-    def add_major(self, title):
+    def add_major(self, code, title):
         major = Major(
+            code=code,
             title=title
         )
         self.session.add(major)
         self.session.commit()
 
-    def add_association_teacher_subject(self, teacher_id, subject_id):
+    def add_association_teacher_subject(self, teacher_code, subject_code):
         association = AssociationTeacherSubject(
-            teacher_id=teacher_id,
-            subject_id=subject_id
+            teacher_id=teacher_code,
+            subject_id=subject_code
         )
         self.session.add(association)
         self.session.commit()
 
-    def add_association_major_subject(self, major_id, subject_id):
+    def add_association_major_subject(self, major_code, subject_code):
         association = AssociationMajorSubject(
-            major_id=major_id,
-            subject_id=subject_id
+            major_id=major_code,
+            subject_id=subject_code
         )
         self.session.add(association)
         self.session.commit()
 
     def add_random_data(self, teacher_count=5, subject_count=5, major_count=5):
-        for _ in range(teacher_count):
+        for i in range(teacher_count):
             self.add_teacher(
-                name=fake.first_name(),
-                lastname=fake.last_name(),
+                code=i,
+                name=fake.first_name()[:30],
+                lastname=fake.last_name()[:30],
                 birthday=fake.date_of_birth(),
-                position=fake.job(),
+                position=fake.job()[:30],
                 degree=fake.random_element(elements=('PhD', 'MSc', 'BSc'))
             )
 
-        for _ in range(subject_count):
+        for i in range(subject_count):
             self.add_subject(
+                code=i,
                 title=fake.word(),
                 hours=fake.random_int(min=20, max=100)
             )
 
-        for _ in range(major_count):
+        for i in range(major_count):
             self.add_major(
+                code=i,
                 title=fake.word()
             )
+            self.add_association_teacher_subject(i, i//2)
+            self.add_association_major_subject(i, i//2)
 
-        teachers = self.session.query(Teacher).all()
-        subjects = self.session.query(Subject).all()
-
-        for teacher in teachers:
-            for subject in subjects:
-                self.add_association_teacher_subject(teacher.id, subject.id)
-
-        majors = self.session.query(Major).all()
-
-        for major in majors:
-            for subject in subjects:
-                self.add_association_major_subject(major.id, subject.id)
-
+        print('database filling completed')
 

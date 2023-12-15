@@ -8,6 +8,7 @@ user_pswd = "$2b$12$xEzieiJijrAiSSzez0pmbuYmSLplTcgWomRly5FL/vOwVSIU5YL6u"
 
 class LoginForm(QWidget):
     show_admin_form = pyqtSignal()
+    show_user_form = pyqtSignal()
 
     def __init__(self, app):
         super().__init__()
@@ -61,4 +62,6 @@ class LoginForm(QWidget):
         if username == 'user':
             if bcrypt.checkpw(password, user_pswd.encode('utf-8')):
                 print('OK')
+                self.show_user_form.emit()
+                self.hide()
 

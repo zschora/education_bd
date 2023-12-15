@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QHBoxLayout
 from PyQt5.QtCore import QFile, QTextStream, Qt
 from src.database_manager import DatabaseManager
 
@@ -13,45 +13,47 @@ class AdminForm(QWidget):
         self.db_manager = DatabaseManager()
 
     def init_ui(self):
-        layout = QVBoxLayout()
+        main_layout = QHBoxLayout()
 
-        self.random_fill_button = QPushButton('Заполнить рандомно бд')
-        self.random_fill_button.clicked.connect(self.random_fill)
-
-        layout.addWidget(self.random_fill_button, alignment=Qt.AlignRight)
-        layout.setAlignment(Qt.AlignCenter)
+        options_layout = QVBoxLayout()
+        options_layout.setAlignment(Qt.AlignTop)
 
         self.print_teachers_button = QPushButton('Вывести учителей')
         self.print_teachers_button.clicked.connect(self.print_teachers)
-
-        layout.addWidget(self.print_teachers_button, alignment=Qt.AlignRight)
-
-        self.add_teacher_button = QPushButton('Добавить учителя')
-        self.add_teacher_button.clicked.connect(self.add_teacher)
-
-        layout.addWidget(self.add_teacher_button, alignment=Qt.AlignRight)
+        options_layout.addWidget(self.print_teachers_button)
 
         self.print_subjects_button = QPushButton('Вывести предметы')
         self.print_subjects_button.clicked.connect(self.print_subjects)
-
-        layout.addWidget(self.print_subjects_button, alignment=Qt.AlignRight)
-
-        self.add_subject_button = QPushButton('Добавить предмет')
-        self.add_subject_button.clicked.connect(self.add_subject)
-
-        layout.addWidget(self.add_subject_button, alignment=Qt.AlignRight)
+        options_layout.addWidget(self.print_subjects_button)
 
         self.print_majors_button = QPushButton('Вывести направления')
         self.print_majors_button.clicked.connect(self.print_majors)
+        options_layout.addWidget(self.print_majors_button)
 
-        layout.addWidget(self.print_majors_button, alignment=Qt.AlignRight)
+        main_layout.addLayout(options_layout)
+
+        modify_layout = QVBoxLayout()
+        modify_layout.setAlignment(Qt.AlignTop)
+
+        self.random_fill_button = QPushButton('Заполнить рандомно бд')
+        self.random_fill_button.clicked.connect(self.random_fill)
+        modify_layout.addWidget(self.random_fill_button)
+
+        self.add_teacher_button = QPushButton('Добавить учителя')
+        self.add_teacher_button.clicked.connect(self.add_teacher)
+        modify_layout.addWidget(self.add_teacher_button)
+
+        self.add_subject_button = QPushButton('Добавить предмет')
+        self.add_subject_button.clicked.connect(self.add_subject)
+        modify_layout.addWidget(self.add_subject_button)
 
         self.add_major_button = QPushButton('Добавить направление')
         self.add_major_button.clicked.connect(self.add_major)
+        modify_layout.addWidget(self.add_major_button)
 
-        layout.addWidget(self.add_major_button, alignment=Qt.AlignRight)
+        main_layout.addLayout(modify_layout)
 
-        self.setLayout(layout)
+        self.setLayout(main_layout)
         self.setWindowTitle('Админ-панель')
         self.setGeometry(300, 300, 400, 200)  # размеры окна
 
@@ -86,10 +88,3 @@ class AdminForm(QWidget):
 
     def add_major(self):
         pass
-
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    admin_form = AdminForm(app)
-    admin_form.show()
-    sys.exit(app.exec_())

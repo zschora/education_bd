@@ -19,16 +19,18 @@ class Base(DeclarativeBase):
 class Subject(Base):
     __tablename__ = "subjects"
     id: Mapped[int] = mapped_column(primary_key=True)
+    code: Mapped[int] = mapped_column(Integer(), unique=True)
     title: Mapped[str] = mapped_column(String(30))
     hours: Mapped[int] = mapped_column(Integer())
 
     def __repr__(self) -> str:
-        return f"Subject(id={self.id!r}, title={self.title!r}, hours={self.hours!r})"
+        return f"Subject(code={self.code!r}, title={self.title!r}, hours={self.hours!r})"
 
 
 class Teacher(Base):
     __tablename__ = "teachers"
     id: Mapped[int] = mapped_column(primary_key=True)
+    code: Mapped[int] = mapped_column(Integer(), unique=True)
     name: Mapped[str] = mapped_column(String(30))
     lastname: Mapped[str] = mapped_column(String(30), nullable=True)
     birthday: Mapped[date] = mapped_column(Date())
@@ -38,28 +40,29 @@ class Teacher(Base):
     subjects: Mapped[List['Subject']] = relationship(secondary='association_teacher_subject')
 
     def __repr__(self) -> str:
-        return f"Teacher(id={self.id!r}, name={self.name!r}, lastname={self.lastname!r}, " \
+        return f"Teacher(code={self.code!r}, name={self.name!r}, lastname={self.lastname!r}, " \
                f"birthday={self.birthday!r}, position={self.position!r}, degree={self.degree!r})"
 
 
 class Major(Base):
     __tablename__ = "majors"
     id: Mapped[int] = mapped_column(primary_key=True)
+    code: Mapped[int] = mapped_column(Integer(), unique=True)
     title: Mapped[str] = mapped_column(String(30))
 
     subjects: Mapped[List['Subject']] = relationship(secondary='association_major_subject')
 
     def __repr__(self) -> str:
-        return f"Major(id={self.id!r}, title={self.title!r})"
+        return f"Major(code={self.code!r}, title={self.title!r})"
 
 
 class AssociationTeacherSubject(Base):
     __tablename__ = 'association_teacher_subject'
-    teacher_id = Column(Integer, ForeignKey('teachers.id'), primary_key=True)
-    subject_id = Column(Integer, ForeignKey('subjects.id'), primary_key=True)
+    teacher_id = Column(Integer, ForeignKey('teachers.code'), primary_key=True)
+    subject_id = Column(Integer, ForeignKey('subjects.code'), primary_key=True)
 
 
 class AssociationMajorSubject(Base):
     __tablename__ = 'association_major_subject'
-    major_id = Column(Integer, ForeignKey('majors.id'), primary_key=True)
-    subject_id = Column(Integer, ForeignKey('subjects.id'), primary_key=True)
+    major_id = Column(Integer, ForeignKey('majors.code'), primary_key=True)
+    subject_id = Column(Integer, ForeignKey('subjects.code'), primary_key=True)
