@@ -32,7 +32,7 @@ class ChangePositionDialog(QDialog):
         self.setLayout(layout)
         self.setWindowTitle('Change Position')
 
-        style = QFile('forms\\styles\\admin_form.css')  # стили формы
+        style = QFile('forms\\styles\\form.css')  # стили формы
         if style.open(QFile.ReadOnly | QFile.Text):
             stream = QTextStream(style)
             self.setStyleSheet(stream.readAll())

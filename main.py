@@ -1,8 +1,7 @@
 from PyQt5.QtWidgets import QApplication
-from forms.login_form import LoginForm
-from forms.admin_form import AdminForm
-from forms.user_form import UserForm
-from datetime import datetime
+from forms.main_forms.login_form import LoginForm
+from forms.main_forms.admin_form import AdminForm
+from forms.main_forms.user_form import UserForm
 
 if __name__ == '__main__':
     app = QApplication([])

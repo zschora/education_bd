@@ -72,7 +72,7 @@ class AdminForm(QWidget):
         self.setWindowTitle('Админ-панель')
         self.setGeometry(300, 300, 400, 200)  # размеры окна
 
-        style = QFile('forms\\styles\\admin_form.css')  # стили формы
+        style = QFile('forms\\styles\\form.css')  # стили формы
         if style.open(QFile.ReadOnly | QFile.Text):
             stream = QTextStream(style)
             self.setStyleSheet(stream.readAll())
